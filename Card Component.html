@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Component</title>
+<style>
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Regular.ttf') format('truetype'); font-weight:400; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Medium.ttf') format('truetype'); font-weight:500; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Bold.ttf') format('truetype'); font-weight:700; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Light.ttf') format('truetype'); font-weight:300; }
+
+:root {
+  --t-body25-size: 25px; --t-body25-line: 1.2; --t-body25-weight: 400; --t-body25-tracking: -0.01em;
+  --t-body20-size: 20px; --t-body20-line: 1.2; --t-body20-weight: 400; --t-body20-tracking: -0.01em;
+  --t-body16-size: 16px; --t-body16-line: 1.2; --t-body16-weight: 400; --t-body16-tracking: 0;
+  --t-h1-size: 62px; --t-h1-line: 1.1; --t-h1-weight: 400; --t-h1-tracking: -0.03em;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Helvetica Now Display', sans-serif;
+  background: #111110;
+  color: #f0efea;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+
+
+// ── Store (shared reactive state) ────────────────────────────────────────────
+function createStore(initial) {
+  let state = { ...initial };
+  const listeners = new Set();
+  const get = () => state;
+  const set = (patch) => {
+    state = { ...state, ...patch };
+    listeners.forEach((fn) => fn(state));
+  };
+  const useStore = () => {
+    const [s, setS] = React.useState(state);
+    React.useEffect(() => {
+      listeners.add(setS);
+      return () => listeners.delete(setS);
+    }, []);
+    return [s, set];
+  };
+  return useStore;
+}
+
+const useStore = createStore({ background: '#0099FF' });
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+const randomColor = () => `hsl(${Math.random() * 360 | 0},${60 + Math.random() * 30 | 0}%,${50 + Math.random() * 15 | 0}%)`;
+
+function lerp(a, b, t) {return a + (b - a) * t;}
+function useSpring(target, stiffness = 0.12) {
+  const val = React.useRef(target);
+  const [v, setV] = React.useState(target);
+  React.useEffect(() => {
+    let raf;
+    const step = () => {
+      val.current = lerp(val.current, target, stiffness);
+      setV(val.current);
+      if (Math.abs(val.current - target) > 0.01) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [target]);
+  return v;
+}
+
+// ── Card ─────────────────────────────────────────────────────────────────────
+function Card({ title, category, img, accentColor, rotate = false, onClick }) {
+  const [hovered, setHovered] = React.useState(false);
+  const [store, setStore] = useStore();
+
+  const scaleTarget = 1;
+  const scale = useSpring(scaleTarget, 0.14);
+
+  const rotateTarget = rotate ? 3 : 0;
+  const rotateVal = useSpring(rotateTarget, 0.1);
+
+  const bg = accentColor || store.background;
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={onClick}
+      style={{
+        width: 320,
+        borderRadius: 0,
+        overflow: 'hidden',
+        background: 'transparent',
+        cursor: 'pointer',
+        transform: `scale(1.009232) rotate(0deg)`,
+        boxShadow: `rgba(0, 0, 0, 0.3) 0px 4px 16px`,
+        transition: 'box-shadow 0.35s ease',
+        userSelect: 'none'
+      }}>
+      
+      {/* Image area */}
+      <div style={{
+        width: '100%',
+        aspectRatio: '4/3',
+        overflow: 'hidden',
+        position: 'relative',
+        background: '#222220'
+      }}>
+        {img ?
+        <img src={img} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+          transform: hovered ? 'scale(1.06)' : 'scale(1)',
+          transition: 'transform 0.5s cubic-bezier(.4,0,.2,1)' }} /> :
+        <div style={{ width: '100%', height: '100%', background: bg,
+          transition: 'background 0.4s ease',
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase',
+            color: 'rgba(0,0,0,0.4)', fontWeight: 500 }}>Click to recolor</span>
+            </div>
+        }
+
+        {/* Hover overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: hovered ? 'rgba(0,0,0,0.22)' : 'rgba(0,0,0,0)',
+          transition: 'background 0.3s',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <span style={{
+            background: 'rgba(255,255,255,0.92)', color: '#111',
+            borderRadius: 100, padding: '8px 20px',
+            fontSize: 12, fontWeight: 500,
+            opacity: hovered ? 1 : 0,
+            transform: hovered ? 'translateY(0) scale(1)' : 'translateY(8px) scale(0.94)',
+            transition: 'opacity 0.28s, transform 0.28s'
+          }}>View project →</span>
+        </div>
+      </div>
+
+      {/* Info */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, padding: "16px 0px 0px" }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <p style={{ fontSize: 'var(--t-body25-size)', lineHeight: 'var(--t-body25-line)', fontWeight: 'var(--t-body25-weight)', letterSpacing: 'var(--t-body25-tracking)', color: '#f0efea' }}>{title}</p>
+        </div>
+        <p style={{ fontSize: 13, color: '#888680', fontWeight: 400 }}>{category}</p>
+      </div>
+    </div>);
+
+}
+
+// ── withHover HOC ─────────────────────────────────────────────────────────────
+function withHover(Component) {
+  return function HoveredComponent(props) {
+    const [hov, setHov] = React.useState(false);
+    return (
+      <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ transform: hov ? 'scale(1.05)' : 'scale(1)', transition: 'transform 0.3s ease' }}>
+        <Component {...props} />
+      </div>);
+
+  };
+}
+
+// ── withRotate HOC ────────────────────────────────────────────────────────────
+function withRotate(Component) {
+  return function RotatedComponent(props) {
+    return <Component {...props} rotate={true} />;
+  };
+}
+
+// ── withRandomColor HOC ───────────────────────────────────────────────────────
+function withRandomColor(Component) {
+  return function RandomColorComponent(props) {
+    const [, setStore] = useStore();
+    return <Component {...props} onClick={() => setStore({ background: randomColor() })} />;
+  };
+}
+
+// ── Demo ─────────────────────────────────────────────────────────────────────
+const RotatingCard = withRotate(Card);
+const RandomCard = withRandomColor(Card);
+
+const PROJECTS = [
+{ title: 'Matias Portfolio', category: 'Web Design & Dev', img: 'https://framerusercontent.com/images/unEXupbo9zvJb8H2NmT5jHekhs.png?width=800' },
+{ title: 'Alto Origen', category: 'Branding & Packaging', img: 'https://framerusercontent.com/images/9A45Gr1oAF79Mc7vjDe0g14wpw.png?width=800' },
+{ title: 'Hub', category: 'Branding & Packaging', img: 'https://framerusercontent.com/images/3oYSMxTXOeFV7bnaEPrCfQ9nGc.png?width=800' }];
+
+
+function App() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 56, alignItems: 'center', padding: '60px 0' }}>
+
+      <div style={{ textAlign: 'center', maxWidth: 560 }}>
+        <p style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase',
+          color: '#666460', marginBottom: 12 }}>Card Component</p>
+        <h1 style={{ fontSize: 28, fontWeight: 500, letterSpacing: '-0.02em', lineHeight: 1.2 }}>
+          Three behaviours — one component
+        </h1>
+      </div>
+
+      {/* Row 1: base cards with real images */}
+      <div>
+        <p style={{ fontSize: 11, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em',
+          marginBottom: 20, textAlign: 'center' }}>Default · withHover scale</p>
+        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {PROJECTS.map((p) => <Card key={p.title} {...p} />)}
+        </div>
+      </div>
+
+      {/* Row 2: rotate + random color */}
+      <div>
+        <p style={{ fontSize: 11, color: '#555', textTransform: 'uppercase', letterSpacing: '0.08em',
+          marginBottom: 20, textAlign: 'center' }}>withRotate · withRandomColor (click to recolor)</p>
+        <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <RotatingCard title="Rotating Card" category="withRotate HOC" />
+          <RandomCard title="Color Card" category="Click to randomize" />
+          <RandomCard title="Color Card 2" category="Shared store state" />
+        </div>
+      </div>
+
+    </div>);
+
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

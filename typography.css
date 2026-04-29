@@ -1,0 +1,90 @@
+/* ── Typography System ──────────────────────────────────────────────────────
+   Based on DM Sans. Import this file into any page.
+   Usage: class="t-h1", "t-h1b", "t-body-42", "t-body-25", "t-body-20", "t-body-16"
+   Or use the CSS custom properties directly.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --font-family: 'Helvetica Now Display', ui-sans-serif, system-ui, sans-serif;
+
+  /* sizes */
+  --t-h1-size:      62px;
+  --t-h1-line:      1.1;
+  --t-h1-weight:    400;
+  --t-h1-tracking:  -0.03em;
+
+  --t-h1b-size:     50px;
+  --t-h1b-line:     1.2;
+  --t-h1b-weight:   400;
+  --t-h1b-tracking: -0.025em;
+
+  --t-body42-size:  42px;
+  --t-body42-line:  1.2;
+  --t-body42-weight: 300;
+  --t-body42-tracking: -0.02em;
+
+  --t-body25-size:  25px;
+  --t-body25-line:  1.2;
+  --t-body25-weight: 400;
+  --t-body25-tracking: -0.01em;
+
+  --t-body20-size:  20px;
+  --t-body20-line:  1.2;
+  --t-body20-weight: 400;
+  --t-body20-tracking: -0.01em;
+
+  --t-body16-size:  16px;
+  --t-body16-line:  1.2;
+  --t-body16-weight: 400;
+  --t-body16-tracking: 0;
+}
+
+/* ── Utility classes ── */
+
+.t-h1 {
+  font-family: var(--font-family);
+  font-size: var(--t-h1-size);
+  line-height: var(--t-h1-line);
+  font-weight: var(--t-h1-weight);
+  letter-spacing: var(--t-h1-tracking);
+}
+
+.t-h1b {
+  font-family: var(--font-family);
+  font-size: var(--t-h1b-size);
+  line-height: var(--t-h1b-line);
+  font-weight: var(--t-h1b-weight);
+  letter-spacing: var(--t-h1b-tracking);
+}
+
+.t-body-42 {
+  font-family: var(--font-family);
+  font-size: var(--t-body42-size);
+  line-height: var(--t-body42-line);
+  font-weight: var(--t-body42-weight);
+  letter-spacing: var(--t-body42-tracking);
+}
+
+.t-body-25 {
+  font-family: var(--font-family);
+  font-size: var(--t-body25-size);
+  line-height: var(--t-body25-line);
+  font-weight: var(--t-body25-weight);
+  letter-spacing: var(--t-body25-tracking);
+}
+
+.t-body-20 {
+  font-family: var(--font-family);
+  font-size: var(--t-body20-size);
+  line-height: var(--t-body20-line);
+  font-weight: var(--t-body20-weight);
+  letter-spacing: var(--t-body20-tracking);
+}
+
+.t-body-16 {
+  font-family: var(--font-family);
+  font-size: var(--t-body16-size);
+  line-height: var(--t-body16-line);
+  font-weight: var(--t-body16-weight);
+  letter-spacing: var(--t-body16-tracking);
+}

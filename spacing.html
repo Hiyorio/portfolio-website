@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spacing System</title>
+<style>
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Regular.ttf') format('truetype'); font-weight:400; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Medium.ttf') format('truetype'); font-weight:500; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Light.ttf') format('truetype'); font-weight:300; }
+
+:root {
+  --sp-2:  2px;
+  --sp-4:  4px;
+  --sp-8:  8px;
+  --sp-12: 12px;
+  --sp-16: 16px;
+  --sp-24: 24px;
+  --sp-32: 32px;
+  --sp-40: 40px;
+  --sp-48: 48px;
+  --sp-56: 56px;
+  --sp-64: 64px;
+  --sp-72: 72px;
+  --sp-80: 80px;
+
+  --bg: #111110;
+  --fg: #f0efea;
+  --fg-muted: #55534f;
+  --border: rgba(255,255,255,0.07);
+  --accent: #f0efea;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Helvetica Now Display', ui-sans-serif, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  padding: 64px 80px 100px;
+  min-height: 100vh;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+}
+header h2 {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+header span {
+  font-size: 11px;
+  color: var(--fg-muted);
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 64px 56px 1fr 80px;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+.row:last-child { border-bottom: none; }
+
+.token {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-wrap {
+  display: flex;
+  align-items: center;
+}
+.bar {
+  height: 6px;
+  border-radius: 100px;
+  background: var(--fg);
+  opacity: 0.9;
+}
+
+.rem {
+  font-size: 11px;
+  color: var(--fg-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* usage chips */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 48px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+.chip-group { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 180px; }
+.chip-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin-bottom: 2px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+.chip b { color: var(--fg); font-weight: 500; }
+
+@media (max-width: 640px) {
+  body { padding: 40px 24px 60px; }
+  .row { grid-template-columns: 56px 48px 1fr; }
+  .rem { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h2>Spacing System</h2>
+  <span>13 tokens · base 2px</span>
+</header>
+
+<div class="grid">
+
+  <!-- token | value | bar | rem -->
+  <div class="row">
+    <span class="token">--sp-2</span>
+    <span class="value">2px</span>
+    <div class="bar-wrap"><div class="bar" style="width:2px"></div></div>
+    <span class="rem">0.125 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-4</span>
+    <span class="value">4px</span>
+    <div class="bar-wrap"><div class="bar" style="width:4px"></div></div>
+    <span class="rem">0.25 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-8</span>
+    <span class="value">8px</span>
+    <div class="bar-wrap"><div class="bar" style="width:8px"></div></div>
+    <span class="rem">0.5 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-12</span>
+    <span class="value">12px</span>
+    <div class="bar-wrap"><div class="bar" style="width:12px"></div></div>
+    <span class="rem">0.75 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-16</span>
+    <span class="value">16px</span>
+    <div class="bar-wrap"><div class="bar" style="width:16px"></div></div>
+    <span class="rem">1 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-24</span>
+    <span class="value">24px</span>
+    <div class="bar-wrap"><div class="bar" style="width:24px"></div></div>
+    <span class="rem">1.5 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-32</span>
+    <span class="value">32px</span>
+    <div class="bar-wrap"><div class="bar" style="width:32px"></div></div>
+    <span class="rem">2 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-40</span>
+    <span class="value">40px</span>
+    <div class="bar-wrap"><div class="bar" style="width:40px"></div></div>
+    <span class="rem">2.5 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-48</span>
+    <span class="value">48px</span>
+    <div class="bar-wrap"><div class="bar" style="width:48px"></div></div>
+    <span class="rem">3 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-56</span>
+    <span class="value">56px</span>
+    <div class="bar-wrap"><div class="bar" style="width:56px"></div></div>
+    <span class="rem">3.5 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-64</span>
+    <span class="value">64px</span>
+    <div class="bar-wrap"><div class="bar" style="width:64px"></div></div>
+    <span class="rem">4 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-72</span>
+    <span class="value">72px</span>
+    <div class="bar-wrap"><div class="bar" style="width:72px"></div></div>
+    <span class="rem">4.5 rem</span>
+  </div>
+
+  <div class="row">
+    <span class="token">--sp-80</span>
+    <span class="value">80px</span>
+    <div class="bar-wrap"><div class="bar" style="width:80px"></div></div>
+    <span class="rem">5 rem</span>
+  </div>
+
+</div>
+
+<!-- Usage guide -->
+<div class="chips">
+  <div class="chip-group">
+    <p class="chip-label">Micro</p>
+    <span class="chip"><b>2–4px</b> — иконки, разделители, border</span>
+    <span class="chip"><b>8px</b> — gap внутри компонента</span>
+    <span class="chip"><b>12px</b> — padding кнопки по вертикали</span>
+  </div>
+  <div class="chip-group">
+    <p class="chip-label">Component</p>
+    <span class="chip"><b>16px</b> — padding карточки</span>
+    <span class="chip"><b>24px</b> — gap между элементами</span>
+    <span class="chip"><b>32px</b> — padding секции (мобайл)</span>
+  </div>
+  <div class="chip-group">
+    <p class="chip-label">Layout</p>
+    <span class="chip"><b>40–48px</b> — отступ между секциями</span>
+    <span class="chip"><b>56–64px</b> — padding страницы</span>
+    <span class="chip"><b>72–80px</b> — hero-отступы, крупные блоки</span>
+  </div>
+</div>
+
+</body>
+</html>

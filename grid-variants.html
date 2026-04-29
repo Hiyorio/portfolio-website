@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grid Variants — Noah Carter</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #111; font-family: 'DM Sans', sans-serif; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const PROJECTS = [
+  { title: "Matias Portfolio",  cat: "Web Design & Dev",     img: "https://framerusercontent.com/images/unEXupbo9zvJb8H2NmT5jHekhs.png?width=800" },
+  { title: "Alto Origen",       cat: "Branding & Packaging", img: "https://framerusercontent.com/images/9A45Gr1oAF79Mc7vjDe0g14wpw.png?width=800" },
+  { title: "Hub",               cat: "Branding & Packaging", img: "https://framerusercontent.com/images/3oYSMxTXOeFV7bnaEPrCfQ9nGc.png?width=800" },
+  { title: "Tercia Pay",        cat: "Web Design & Dev",     img: "https://framerusercontent.com/images/aiBJFe5shqqYOamIapEoeVUTDk.png?width=800" },
+  { title: "Nura",              cat: "Packaging",            img: "https://framerusercontent.com/images/TrhuWdIoNo2UnRTqSMaJCVGYaeE.png?width=800" },
+  { title: "LIAM HOLT©",       cat: "Web Design & Dev",     img: "https://framerusercontent.com/images/iZz5fu1U5G9401dtoPgk6ZCmtk.png?width=800" },
+  { title: "La Llave Agency",   cat: "Web Design & Dev",     img: "https://framerusercontent.com/images/JU5TGyi77w67NxSN0tJNSVR9M.png?width=800" },
+  { title: "Wave Coffee",       cat: "Branding & Packaging", img: "https://framerusercontent.com/images/YMtsWTIyhaOhu3E4o3bAaZ1Z6o.png?width=800" },
+  { title: "Web Studio",        cat: "Web Design & Dev",     img: "https://framerusercontent.com/images/mAF8lEXdcXyyWUq1LEMDxW4r304.png?width=1200" },
+];
+
+/* ── Shared card styles ── */
+const cardBase = {
+  display: 'block',
+  textDecoration: 'none',
+  background: '#1c1c1a',
+  borderRadius: 12,
+  overflow: 'hidden',
+  cursor: 'pointer',
+  position: 'relative',
+};
+
+function Card({ p, imgStyle, children }) {
+  const [hov, setHov] = React.useState(false);
+  return (
+    <a
+      href="#"
+      style={{ ...cardBase }}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+    >
+      <div style={{ overflow: 'hidden', position: 'relative', ...imgStyle }}>
+        <img
+          src={p.img}
+          alt={p.title}
+          style={{
+            width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+            transition: 'transform 0.5s cubic-bezier(.4,0,.2,1)',
+            transform: hov ? 'scale(1.06)' : 'scale(1)',
+          }}
+        />
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: hov ? 'rgba(0,0,0,0.28)' : 'rgba(0,0,0,0)',
+          transition: 'background 0.35s',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <span style={{
+            background: 'rgba(255,255,255,0.9)', color: '#111',
+            borderRadius: 100, padding: '7px 16px', fontSize: 12, fontWeight: 500,
+            opacity: hov ? 1 : 0,
+            transform: hov ? 'translateY(0) scale(1)' : 'translateY(8px) scale(0.94)',
+            transition: 'opacity 0.3s, transform 0.3s',
+          }}>View project →</span>
+        </div>
+      </div>
+      <div style={{ padding: '14px 16px 16px' }}>
+        <p style={{ fontSize: 13, fontWeight: 500, color: '#f0efea', marginBottom: 3 }}>{p.title}</p>
+        <p style={{ fontSize: 12, color: '#888680' }}>{p.cat}</p>
+        {children}
+      </div>
+    </a>
+  );
+}
+
+/* ════════════════════════════════════════
+   VARIANT A — original 2-col even + wide last
+   ════════════════════════════════════════ */
+function GridA() {
+  const wrap = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, width: 580 };
+  return (
+    <div style={wrap}>
+      {PROJECTS.slice(0,8).map(p => (
+        <Card key={p.title} p={p} imgStyle={{ aspectRatio: '4/3' }} />
+      ))}
+      <div style={{ gridColumn: '1 / -1' }}>
+        <Card p={PROJECTS[8]} imgStyle={{ aspectRatio: '16/7' }} />
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
+   VARIANT B — masonry-feel (1 big + 2 small stacked)
+   ════════════════════════════════════════ */
+function GridB() {
+  const wrap = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, width: 580 };
+  // row 1: big left (2 rows tall), 2 stacked right
+  // row 2: 2 even
+  // row 3: big right (2 rows tall), 2 stacked left
+  return (
+    <div style={{ ...wrap, gridTemplateRows: 'auto' }}>
+      {/* row 1 */}
+      <div style={{ gridRow: '1 / 3' }}>
+        <Card p={PROJECTS[0]} imgStyle={{ aspectRatio: '3/4', height: '100%', minHeight: 360 }} />
+      </div>
+      <Card p={PROJECTS[1]} imgStyle={{ aspectRatio: '4/3' }} />
+      <Card p={PROJECTS[2]} imgStyle={{ aspectRatio: '4/3' }} />
+      {/* row 2: 2 even */}
+      <Card p={PROJECTS[3]} imgStyle={{ aspectRatio: '4/3' }} />
+      <Card p={PROJECTS[4]} imgStyle={{ aspectRatio: '4/3' }} />
+      {/* row 3: big right */}
+      <Card p={PROJECTS[5]} imgStyle={{ aspectRatio: '4/3' }} />
+      <div style={{ gridRow: '5 / 7' }}>
+        <Card p={PROJECTS[6]} imgStyle={{ aspectRatio: '3/4', height: '100%', minHeight: 360 }} />
+      </div>
+      <Card p={PROJECTS[7]} imgStyle={{ aspectRatio: '4/3' }} />
+      {/* wide */}
+      <div style={{ gridColumn: '1 / -1' }}>
+        <Card p={PROJECTS[8]} imgStyle={{ aspectRatio: '21/7' }} />
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
+   VARIANT C — 3-column editorial
+   ════════════════════════════════════════ */
+function GridC() {
+  const wrap = { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, width: 700 };
+  return (
+    <div style={wrap}>
+      {/* first card spans 2 cols */}
+      <div style={{ gridColumn: '1 / 3' }}>
+        <Card p={PROJECTS[0]} imgStyle={{ aspectRatio: '16/9' }} />
+      </div>
+      <Card p={PROJECTS[1]} imgStyle={{ aspectRatio: '3/4' }} />
+      <Card p={PROJECTS[2]} imgStyle={{ aspectRatio: '4/3' }} />
+      <Card p={PROJECTS[3]} imgStyle={{ aspectRatio: '4/3' }} />
+      <Card p={PROJECTS[4]} imgStyle={{ aspectRatio: '4/3' }} />
+      {/* middle wide */}
+      <div style={{ gridColumn: '1 / -1' }}>
+        <Card p={PROJECTS[5]} imgStyle={{ aspectRatio: '21/6' }} />
+      </div>
+      <Card p={PROJECTS[6]} imgStyle={{ aspectRatio: '4/3' }} />
+      <Card p={PROJECTS[7]} imgStyle={{ aspectRatio: '4/3' }} />
+      <div style={{ gridColumn: '3 / 4', gridRow: 'span 2' }}>
+        <Card p={PROJECTS[8]} imgStyle={{ aspectRatio: '3/4', height: '100%', minHeight: 300 }} />
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
+   VARIANT D — horizontal list (magazine rows)
+   ════════════════════════════════════════ */
+function GridD() {
+  const ListCard = ({ p, big }) => {
+    const [hov, setHov] = React.useState(false);
+    return (
+      <a
+        href="#"
+        style={{
+          display: 'flex', gap: 16, textDecoration: 'none', padding: '16px 0',
+          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          alignItems: 'center',
+        }}
+        onMouseEnter={() => setHov(true)}
+        onMouseLeave={() => setHov(false)}
+      >
+        <div style={{
+          width: big ? 220 : 120, flexShrink: 0,
+          aspectRatio: '3/2', borderRadius: 8, overflow: 'hidden',
+          transition: 'width 0.4s ease',
+        }}>
+          <img
+            src={p.img} alt={p.title}
+            style={{
+              width: '100%', height: '100%', objectFit: 'cover',
+              transition: 'transform 0.5s ease',
+              transform: hov ? 'scale(1.06)' : 'scale(1)',
+            }}
+          />
+        </div>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: hov ? 16 : 15, fontWeight: 500, color: '#f0efea', marginBottom: 4, transition: 'font-size 0.2s' }}>{p.title}</p>
+          <p style={{ fontSize: 12, color: '#888680' }}>{p.cat}</p>
+        </div>
+        <span style={{
+          fontSize: 12, color: hov ? '#f0efea' : '#555', transition: 'color 0.2s',
+          paddingRight: 4,
+        }}>→</span>
+      </a>
+    );
+  };
+  return (
+    <div style={{ width: 560 }}>
+      {PROJECTS.map((p, i) => <ListCard key={p.title} p={p} big={i === 0} />)}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
+   VARIANT E — numbered editorial list
+   ════════════════════════════════════════ */
+function GridE() {
+  const Row = ({ p, idx }) => {
+    const [hov, setHov] = React.useState(false);
+    return (
+      <a
+        href="#"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '40px 1fr 180px 80px',
+          gap: 16,
+          alignItems: 'center',
+          padding: '14px 0',
+          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          textDecoration: 'none',
+          transition: 'background 0.2s',
+          borderRadius: 6,
+          paddingInline: 8,
+          background: hov ? 'rgba(255,255,255,0.04)' : 'transparent',
+        }}
+        onMouseEnter={() => setHov(true)}
+        onMouseLeave={() => setHov(false)}
+      >
+        <span style={{ fontSize: 12, color: '#555', fontVariantNumeric: 'tabular-nums' }}>
+          {String(idx + 1).padStart(2,'0')}
+        </span>
+        <span style={{ fontSize: 14, fontWeight: 500, color: '#f0efea' }}>{p.title}</span>
+        <span style={{ fontSize: 12, color: '#888680' }}>{p.cat}</span>
+        <div style={{
+          width: 60, height: 40, borderRadius: 6, overflow: 'hidden',
+          opacity: hov ? 1 : 0,
+          transform: hov ? 'scale(1)' : 'scale(0.85)',
+          transition: 'opacity 0.25s, transform 0.25s',
+        }}>
+          <img src={p.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+      </a>
+    );
+  };
+  return (
+    <div style={{ width: 600 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '40px 1fr 180px 80px', gap: 16, padding: '0 8px 10px', borderBottom: '1px solid rgba(255,255,255,0.12)', marginBottom: 4 }}>
+        <span style={{ fontSize: 11, color: '#444', textTransform: 'uppercase', letterSpacing: '0.08em' }}>#</span>
+        <span style={{ fontSize: 11, color: '#444', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Project</span>
+        <span style={{ fontSize: 11, color: '#444', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Category</span>
+        <span style={{ fontSize: 11, color: '#444', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Preview</span>
+      </div>
+      {PROJECTS.map((p, i) => <Row key={p.title} p={p} idx={i} />)}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
+   VARIANT F — asymmetric 60/40 split rows
+   ════════════════════════════════════════ */
+function GridF() {
+  const pairs = [
+    [PROJECTS[0], PROJECTS[1]],
+    [PROJECTS[2], PROJECTS[3]],
+    [PROJECTS[4], PROJECTS[5]],
+    [PROJECTS[6], PROJECTS[7]],
+  ];
+  return (
+    <div style={{ width: 600, display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {pairs.map(([a, b], i) => (
+        <div key={i} style={{
+          display: 'grid',
+          gridTemplateColumns: i % 2 === 0 ? '3fr 2fr' : '2fr 3fr',
+          gap: 12,
+        }}>
+          <Card p={a} imgStyle={{ aspectRatio: '4/3' }} />
+          <Card p={b} imgStyle={{ aspectRatio: '4/3' }} />
+        </div>
+      ))}
+      <Card p={PROJECTS[8]} imgStyle={{ aspectRatio: '21/7' }} />
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
+   VARIANT G — hover-expand gallery
+   ════════════════════════════════════════ */
+function GridG() {
+  const [active, setActive] = React.useState(null);
+  const cols = PROJECTS.map((p, i) => ({
+    flex: active === i ? 3 : 1,
+    transition: 'flex 0.5s cubic-bezier(.4,0,.2,1)',
+  }));
+  return (
+    <div style={{ width: 700, display: 'flex', gap: 8, height: 320 }}>
+      {PROJECTS.slice(0,6).map((p, i) => (
+        <div
+          key={p.title}
+          style={{
+            flex: cols[i].flex,
+            transition: cols[i].transition,
+            borderRadius: 12,
+            overflow: 'hidden',
+            position: 'relative',
+            cursor: 'pointer',
+            minWidth: 0,
+          }}
+          onMouseEnter={() => setActive(i)}
+          onMouseLeave={() => setActive(null)}
+        >
+          <img
+            src={p.img}
+            alt={p.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
+          <div style={{
+            position: 'absolute', bottom: 0, left: 0, right: 0,
+            background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)',
+            padding: '20px 12px 12px',
+            opacity: active === i ? 1 : 0,
+            transition: 'opacity 0.35s',
+          }}>
+            <p style={{ fontSize: 13, fontWeight: 500, color: '#fff' }}>{p.title}</p>
+            <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>{p.cat}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
+   APP
+   ════════════════════════════════════════ */
+function App() {
+  return (
+    <DCCanvas title="Project Grid Variants">
+      <DCSection id="grid" title="Grid Layout Options">
+        <DCArtboard id="a" label="A — 2-col even" width={620} height={1380}>
+          <div style={{ background: '#111110', padding: 20, minHeight: '100%' }}>
+            <GridA />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="b" label="B — Masonry feel" width={620} height={1480}>
+          <div style={{ background: '#111110', padding: 20, minHeight: '100%' }}>
+            <GridB />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="c" label="C — 3-col editorial" width={740} height={1100}>
+          <div style={{ background: '#111110', padding: 20, minHeight: '100%' }}>
+            <GridC />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="d" label="D — Horizontal list" width={600} height={800}>
+          <div style={{ background: '#111110', padding: 20, minHeight: '100%' }}>
+            <GridD />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="e" label="E — Numbered rows" width={640} height={620}>
+          <div style={{ background: '#111110', padding: 20, minHeight: '100%' }}>
+            <GridE />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="f" label="F — Asymmetric 60/40" width={640} height={1000}>
+          <div style={{ background: '#111110', padding: 20, minHeight: '100%' }}>
+            <GridF />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="g" label="G — Hover-expand accordion" width={740} height={380}>
+          <div style={{ background: '#111110', padding: 20, minHeight: '100%' }}>
+            <GridG />
+          </div>
+        </DCArtboard>
+      </DCSection>
+    </DCCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noah Carter — Brand and Web Designer</title>
+<style>
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Thin.ttf') format('truetype'); font-weight:100; font-style:normal; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Light.ttf') format('truetype'); font-weight:300; font-style:normal; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-LightIta.ttf') format('truetype'); font-weight:300; font-style:italic; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Regular.ttf') format('truetype'); font-weight:400; font-style:normal; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-RegIta.ttf') format('truetype'); font-weight:400; font-style:italic; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Medium.ttf') format('truetype'); font-weight:500; font-style:normal; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-Black.ttf') format('truetype'); font-weight:900; font-style:normal; }
+@font-face { font-family:'Helvetica Now Display'; src:url('fonts/HelveticaNowDisplay-ExtraBold.ttf') format('truetype'); font-weight:800; font-style:normal; }
+</style>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --bg-card: #eceae4;
+    --fg: #0e0e0c;
+    --fg-muted: #7a7870;
+    --border: rgba(0,0,0,0.1);
+    --badge-bg: #e8e6e0;
+    --badge-dot: #22c55e;
+    --nav-bg: rgba(245,244,240,0.85);
+    --card-overlay: rgba(14,14,12,0.0);
+    --toggle-bg: #d8d6d0;
+    --toggle-knob: #fff;
+    --btn-bg: #0e0e0c;
+    --btn-fg: #f5f4f0;
+    --btn-hover-bg: #2a2a27;
+    --shadow: 0 2px 20px rgba(0,0,0,0.08);
+    --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    /* typography */
+    --t-h1-size: 62px; --t-h1-line: 1.1; --t-h1-weight: 400; --t-h1-tracking: -0.03em;
+    --t-h1b-size: 50px; --t-h1b-line: 1.2; --t-h1b-weight: 400; --t-h1b-tracking: -0.025em;
+    --t-body42-size: 42px; --t-body42-line: 1.2; --t-body42-weight: 300; --t-body42-tracking: -0.02em;
+    --t-body25-size: 25px; --t-body25-line: 1.2; --t-body25-weight: 400; --t-body25-tracking: -0.01em;
+    --t-body20-size: 20px; --t-body20-line: 1.2; --t-body20-weight: 400; --t-body20-tracking: -0.01em;
+    --t-body16-size: 16px; --t-body16-line: 1.2; --t-body16-weight: 400; --t-body16-tracking: 0;
+  }
+
+  [data-theme="dark"] {
+    --bg: #111110;
+    --bg-card: #1c1c1a;
+    --fg: #f0efea;
+    --fg-muted: #888680;
+    --border: rgba(255,255,255,0.08);
+    --badge-bg: #252522;
+    --nav-bg: rgba(17,17,16,0.85);
+    --toggle-bg: #3a3a36;
+    --toggle-knob: #f0efea;
+    --btn-bg: #f0efea;
+    --btn-fg: #111110;
+    --btn-hover-bg: #d0cfc8;
+    --shadow: 0 2px 20px rgba(0,0,0,0.4);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Helvetica Now Display', sans-serif;
+    background-color: var(--bg);
+    color: var(--fg);
+    transition: background-color var(--transition), color var(--transition);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--nav-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color var(--transition), border-color var(--transition);
+  }
+
+  .nav-logo {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .nav-logo:hover { opacity: 0.6; }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--fg-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0;
+    width: 0; height: 1px;
+    background: var(--fg);
+    transition: width 0.25s ease;
+  }
+  .nav-link:hover { color: var(--fg); }
+  .nav-link:hover::after { width: 100%; }
+
+  /* dark/light toggle */
+  .theme-toggle {
+    width: 44px; height: 24px;
+    background: var(--toggle-bg);
+    border-radius: 100px;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    transition: background 0.3s;
+    flex-shrink: 0;
+  }
+  .theme-toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--toggle-knob);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+    left: 3px;
+  }
+  [data-theme="dark"] .theme-toggle::after { transform: translateX(20px); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 140px 32px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--badge-bg);
+    border-radius: 100px;
+    padding: 5px 12px 5px 10px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--fg-muted);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.1s forwards;
+    transition: background-color var(--transition);
+  }
+  .hero-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--badge-dot);
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(34,197,94,0.2); }
+    50% { box-shadow: 0 0 0 5px rgba(34,197,94,0.1); }
+  }
+
+  .hero-heading {
+    font-size: var(--t-h1-size);
+    line-height: var(--t-h1-line);
+    font-weight: 900;
+    letter-spacing: var(--t-h1-tracking);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    max-width: 820px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-heading em {
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    border-radius: 100px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.25s, transform 0.2s;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.35s forwards;
+  }
+  .hero-cta:hover {
+    background: var(--btn-hover-bg);
+    transform: scale(1.02);
+  }
+  .hero-cta svg { width: 14px; height: 14px; }
+
+  /* ── HERO IMAGE ── */
+  .hero-image-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
+  }
+  .hero-image-wrap img {
+    width: 100%;
+    border-radius: 16px;
+    display: block;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  .hero-image-wrap:hover img {
+    transform: scale(1.01);
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    padding: 0 32px;
+    max-width: 1200px;
+    margin: 0 auto 24px;
+  }
+
+  .projects {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px 120px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 280px;
+    gap: 12px;
+  }
+
+  /* Row 1: 2 equal cards, 3 cols each */
+  .projects .card-r1a { grid-column: 1 / 4; grid-row: 1; }
+  .projects .card-r1b { grid-column: 4 / 7; grid-row: 1; }
+
+  /* Row 2: big (4 cols, 2 rows) + 2 stacked (2 cols each) */
+  .projects .card-r2big  { grid-column: 1 / 5; grid-row: 2 / 4; }
+  .projects .card-r2top  { grid-column: 5 / 7; grid-row: 2; }
+  .projects .card-r2bot  { grid-column: 5 / 7; grid-row: 3; }
+
+  /* Row 4: 3 equal cards, 2 cols each */
+  .projects .card-r4a { grid-column: 1 / 3; grid-row: 4; }
+  .projects .card-r4b { grid-column: 3 / 5; grid-row: 4; }
+  .projects .card-r4c { grid-column: 5 / 7; grid-row: 4; }
+
+  /* Row 5: full width */
+  .projects .card-r5  { grid-column: 1 / 7; grid-row: 5; }
+
+  .project-card {
+    display: block;
+    text-decoration: none;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-card);
+    position: relative;
+    cursor: pointer;
+    transition: background-color var(--transition);
+    opacity: 0;
+    height: 100%;
+  }
+
+  .card-img-wrap {
+    width: 100%;
+    height: calc(100% - 64px);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .project-card:hover .card-img-wrap img {
+    transform: scale(1.05);
+  }
+
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    transition: background 0.4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .project-card:hover .card-overlay {
+    background: rgba(0,0,0,0.18);
+  }
+
+  .card-view-btn {
+    background: rgba(255,255,255,0.9);
+    color: #111;
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .project-card:hover .card-view-btn {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .card-info {
+    padding: 16px 20px 20px;
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+    transition: color var(--transition);
+  }
+
+  .card-category {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--fg-muted);
+    transition: color var(--transition);
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-section {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    overflow: hidden;
+    margin-bottom: 80px;
+    transition: border-color var(--transition);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 48px;
+    width: max-content;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--fg-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .marquee-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--fg-muted);
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    transition: border-color var(--transition);
+  }
+
+  .footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .footer-logo {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .footer-copy {
+    font-size: 13px;
+    color: var(--fg-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+  .footer-link {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--fg-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--fg); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* cursor custom */
+  .cursor {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--fg);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s, transform 0.15s, width 0.25s, height 0.25s, background 0.25s, border-color 0.3s;
+    opacity: 0;
+    mix-blend-mode: difference;
+  }
+  .cursor.visible { opacity: 1; }
+  .cursor.hovered {
+    width: 60px; height: 60px;
+    background: rgba(255,255,255,0.15);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .hero { padding: 110px 20px 60px; }
+    .hero-image-wrap { padding: 0 20px 60px; }
+    .section-label, .projects { padding-left: 20px; padding-right: 20px; }
+    footer { padding: 32px 20px; }
+    .hero-heading { font-size: clamp(28px, 6vw, var(--t-h1-size)); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Noah Carter</a>
+  <div class="nav-right">
+    <a href="#about" class="nav-link">About me</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">
+    <span class="hero-dot"></span>
+    Available for work
+  </div>
+  <h1 class="hero-heading" style="font-family: &quot;Helvetica Now Display&quot;; font-weight: 700">
+    Product Designer with 8 years — Mobile &amp; Web.<br>
+    I create design vision for ~1M MAU / 10M+ downloads.<br>
+    Focusing on Visuals, Data, and People across global markets.
+  </h1>
+  <a href="https://cal.com/" class="hero-cta" target="_blank" rel="noopener">
+    Book a call
+    <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+</section>
+
+<!-- HERO IMAGE -->
+<div class="hero-image-wrap">
+  <img
+    src="https://framerusercontent.com/images/8K805BudqKDRpoISvFXJS1TRU.png?width=1200&height=673"
+    alt="Noah Carter Design Work"
+    loading="lazy"
+  >
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack">
+    <!-- items repeated twice for seamless loop -->
+    <span class="marquee-item">Brand Identity <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Web Design <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Packaging <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Visual Identity <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Art Direction <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Digital Experiences <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Motion Design <span class="marquee-dot"></span></span>
+    <span class="marquee-item">UI Design <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Brand Identity <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Web Design <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Packaging <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Visual Identity <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Art Direction <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Digital Experiences <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Motion Design <span class="marquee-dot"></span></span>
+    <span class="marquee-item">UI Design <span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<p class="section-label">Selected work</p>
+<div class="projects" id="projects">
+
+  <!-- Row 1: 2 equal, 3 cols each -->
+  <a class="project-card card-r1a" href="#">
+    <div class="card-img-wrap">
+      <img src="https://framerusercontent.com/images/unEXupbo9zvJb8H2NmT5jHekhs.png?width=800" alt="Matias Portfolio" loading="lazy">
+      <div class="card-overlay"><div class="card-view-btn">View project →</div></div>
+    </div>
+    <div class="card-info">
+      <p class="card-title">Matias Portfolio</p>
+      <p class="card-category">Web Design and Development</p>
+    </div>
+  </a>
+
+  <a class="project-card card-r1b" href="#">
+    <div class="card-img-wrap">
+      <img src="https://framerusercontent.com/images/9A45Gr1oAF79Mc7vjDe0g14wpw.png?width=800" alt="Alto Origen" loading="lazy">
+      <div class="card-overlay"><div class="card-view-btn">View project →</div></div>
+    </div>
+    <div class="card-info">
+      <p class="card-title">Alto Origen</p>
+      <p class="card-category">Branding &amp; Packaging</p>
+    </div>
+  </a>
+
+  <!-- Row 2: big (4 cols × 2 rows) + 2 stacked (2 cols × 1 row each) -->
+  <a class="project-card card-r2big" href="#">
+    <div class="card-img-wrap">
+      <img src="https://framerusercontent.com/images/3oYSMxTXOeFV7bnaEPrCfQ9nGc.png?width=800" alt="Hub" loading="lazy">
+      <div class="card-overlay"><div class="card-view-btn">View project →</div></div>
+    </div>
+    <div class="card-info">
+      <p class="card-title">Hub</p>
+      <p class="card-category">Branding &amp; Packaging</p>
+    </div>
+  </a>
+
+  <a class="project-card card-r2top" href="#">
+    <div class="card-img-wrap">
+      <img src="https://framerusercontent.com/images/aiBJFe5shqqYOamIapEoeVUTDk.png?width=800" alt="Tercia Pay" loading="lazy">
+      <div class="card-overlay"><div class="card-view-btn">View project →</div></div>
+    </div>
+    <div class="card-info">
+      <p class="card-title">Tercia Pay</p>
+      <p class="card-category">Web Design &amp; Development</p>
+    </div>
+  </a>
+
+  <a class="project-card card-r2bot" href="#">
+    <div class="card-img-wrap">
+      <img src="https://framerusercontent.com/images/TrhuWdIoNo2UnRTqSMaJCVGYaeE.png?width=800" alt="Nura" loading="lazy">
+      <div class="card-overlay"><div class="card-view-btn">View project →</div></div>
+    </div>
+    <div class="card-info">
+      <p class="card-title">Nura</p>
+      <p class="card-category">Packaging</p>
+    </div>
+  </a>
+
+  <!-- Row 4: 3 equal cards, 2 cols each -->
+  <a class="project-card card-r4a" href="#">
+    <div class="card-img-wrap">
+      <img src="https://framerusercontent.com/images/iZz5fu1U5G9401dtoPgk6ZCmtk.png?width=800" alt="Liam Holt" loading="lazy">
+      <div class="card-overlay"><div class="card-view-btn">View project →</div></div>
+    </div>
+    <div class="card-info">
+      <p class="card-title">LIAM HOLT©</p>
+      <p class="card-category">Web Design &amp; Development</p>
+    </div>
+  </a>
+
+  <a class="project-card card-r4b" href="#">
+    <div class="card-img-wrap">
+      <img src="https://framerusercontent.com/images/JU5TGyi77w67NxSN0tJNSVR9M.png?width=800" alt="La Llave Agency" loading="lazy">
+      <div class="card-overlay"><div class="card-view-btn">View project →</div></div>
+    </div>
+    <div class="card-info">
+      <p class="card-title">La Llave Agency</p>
+      <p class="card-category">Web Design &amp; Development</p>
+    </div>
+  </a>
+
+  <a class="project-card card-r4c" href="#">
+    <div class="card-img-wrap">
+      <img src="https://framerusercontent.com/images/YMtsWTIyhaOhu3E4o3bAaZ1Z6o.png?width=800" alt="Wave Coffee" loading="lazy">
+      <div class="card-overlay"><div class="card-view-btn">View project →</div></div>
+    </div>
+    <div class="card-info">
+      <p class="card-title">Wave Coffee</p>
+      <p class="card-category">Branding &amp; Packaging</p>
+    </div>
+  </a>
+
+  <!-- Row 5: full width -->
+  <a class="project-card card-r5" href="#">
+    <div class="card-img-wrap">
+      <img src="https://framerusercontent.com/images/mAF8lEXdcXyyWUq1LEMDxW4r304.png?width=1200" alt="Web Studio" loading="lazy">
+      <div class="card-overlay"><div class="card-view-btn">View project →</div></div>
+    </div>
+    <div class="card-info">
+      <p class="card-title">Web Studio</p>
+      <p class="card-category">Web Design &amp; Development</p>
+    </div>
+  </a>
+
+</div>
+
+<!-- FOOTER -->
+<footer id="about">
+  <div class="footer-left">
+    <a href="#" class="footer-logo">Noah Carter</a>
+    <span class="footer-copy">©2026 Noah Carter</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/maxiriani.design/" class="footer-link" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://x.com/max_iriani" class="footer-link" target="_blank" rel="noopener">X / Twitter</a>
+    <a href="https://www.linkedin.com/in/maximiliano-iriani-712612226/" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<div id="tweaks-root"></div>
+<script type="text/babel">
+// ── TWEAKS PANEL (inlined) ──────────────────────────────────────────────────
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+    border-radius:50%;background:#fff;border:.5px solid rgba(0,0,0,.12);
+    box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2}
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+`;
+
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues(prev => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+  }, []);
+  return [values, setTweak];
+}
+
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clamp = React.useCallback(() => {
+    const panel = dragRef.current; if (!panel) return;
+    const maxR = Math.max(PAD, window.innerWidth - panel.offsetWidth - PAD);
+    const maxB = Math.max(PAD, window.innerHeight - panel.offsetHeight - PAD);
+    offsetRef.current = { x: Math.min(maxR, Math.max(PAD, offsetRef.current.x)), y: Math.min(maxB, Math.max(PAD, offsetRef.current.y)) };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => { if (open) clamp(); }, [open, clamp]);
+
+  React.useEffect(() => {
+    const onMsg = e => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => { setOpen(false); window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); };
+
+  const onDragStart = e => {
+    const panel = dragRef.current; if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const sr = window.innerWidth - r.right, sb = window.innerHeight - r.bottom;
+    const move = ev => { offsetRef.current = { x: sr - (ev.clientX - sx), y: sb - (ev.clientY - sy) }; clamp(); };
+    const up = () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel" style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" onMouseDown={e => e.stopPropagation()} onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+function TweakSection({ title, children }) {
+  return <><div className="twk-sect">{title}</div>{children}</>;
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+        onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <div className="twk-row">
+      <div className="twk-lbl"><span>{label}</span><span className="twk-val">{value}{unit}</span></div>
+      <input type="range" className="twk-slider" min={min} max={max} step={step}
+        value={value} onChange={e => onChange(Number(e.target.value))} />
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const opts = options.map(o => typeof o === 'object' ? o : { value: o, label: o });
+  const idx = Math.max(0, opts.findIndex(o => o.value === value));
+  const n = opts.length;
+  const valueRef = React.useRef(value); valueRef.current = value;
+  const segAt = cx => {
+    const r = trackRef.current.getBoundingClientRect();
+    const i = Math.floor(((cx - r.left - 2) / (r.width - 4)) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+  const onPointerDown = e => {
+    const v0 = segAt(e.clientX); if (v0 !== valueRef.current) onChange(v0);
+    const move = ev => { const v = segAt(ev.clientX); if (v !== valueRef.current) onChange(v); };
+    const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+  };
+  return (
+    <div className="twk-row">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <div ref={trackRef} className="twk-seg" onPointerDown={onPointerDown}>
+        <div className="twk-seg-thumb" style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`, width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map(o => <button key={o.value} type="button">{o.label}</button>)}
+      </div>
+    </div>
+  );
+}
+
+// ── TWEAKS APP ──────────────────────────────────────────────────────────────
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "showHeroImage": false,
+  "showMarquee": false,
+  "showSectionLabel": true,
+  "showFooter": false,
+  "gridCols": "2",
+  "cardRadius": 12,
+  "showCursor": true,
+  "parallax": true
+}/*EDITMODE-END*/;
+
+function TweaksApp() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  React.useEffect(() => {
+    const heroImg  = document.querySelector('.hero-image-wrap');
+    const marquee  = document.querySelector('.marquee-section');
+    const label    = document.querySelector('.section-label');
+    const footer   = document.querySelector('footer');
+    const cursor   = document.getElementById('cursor');
+    const projects = document.getElementById('projects');
+
+    if (heroImg)  heroImg.style.display  = tweaks.showHeroImage    ? '' : 'none';
+    if (marquee)  marquee.style.display  = tweaks.showMarquee      ? '' : 'none';
+    if (label)    label.style.display    = tweaks.showSectionLabel  ? '' : 'none';
+    if (footer)   footer.style.display   = tweaks.showFooter        ? '' : 'none';
+    if (cursor)   cursor.style.display   = tweaks.showCursor        ? '' : 'none';
+
+    if (projects) {
+      const map = { '1': '1fr', '2': '1fr 1fr', '3': '1fr 1fr 1fr' };
+      projects.style.gridTemplateColumns = map[tweaks.gridCols] || '1fr 1fr';
+      const wideCard = projects.querySelector('.project-card[style*="grid-column"]');
+      if (wideCard) wideCard.style.gridColumn = tweaks.gridCols === '1' ? '' : '1 / -1';
+    }
+
+    document.querySelectorAll('.project-card').forEach(c => {
+      c.style.borderRadius = tweaks.cardRadius + 'px';
+    });
+
+    window.__parallaxEnabled = tweaks.parallax;
+  }, [tweaks]);
+
+  return (
+    <TweaksPanel>
+      <TweakSection title="Блоки страницы">
+        <TweakToggle label="Hero-изображение"  value={tweaks.showHeroImage}    onChange={v => setTweak('showHeroImage', v)} />
+        <TweakToggle label="Бегущая строка"     value={tweaks.showMarquee}      onChange={v => setTweak('showMarquee', v)} />
+        <TweakToggle label="Заголовок секции"   value={tweaks.showSectionLabel} onChange={v => setTweak('showSectionLabel', v)} />
+        <TweakToggle label="Футер"              value={tweaks.showFooter}       onChange={v => setTweak('showFooter', v)} />
+      </TweakSection>
+      <TweakSection title="Сетка проектов">
+        <TweakRadio label="Колонки" options={['1','2','3']} value={tweaks.gridCols} onChange={v => setTweak('gridCols', v)} />
+        <TweakSlider label="Скругление карточек" min={0} max={28} step={2} value={tweaks.cardRadius} onChange={v => setTweak('cardRadius', v)} />
+      </TweakSection>
+      <TweakSection title="Детали">
+        <TweakToggle label="Кастомный курсор" value={tweaks.showCursor} onChange={v => setTweak('showCursor', v)} />
+        <TweakToggle label="Параллакс"        value={tweaks.parallax}   onChange={v => setTweak('parallax', v)} />
+      </TweakSection>
+    </TweaksPanel>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweaksApp />);
+</script>
+
+<script>
+  // ── THEME ──
+  const html = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('theme') || 'light';
+  html.setAttribute('data-theme', saved);
+
+  toggle.addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  // ── CURSOR ──
+  const cursor = document.getElementById('cursor');
+  let cx = 0, cy = 0, tx = 0, ty = 0;
+  document.addEventListener('mousemove', e => {
+    tx = e.clientX; ty = e.clientY;
+    cursor.classList.add('visible');
+  });
+  document.addEventListener('mouseleave', () => cursor.classList.remove('visible'));
+
+  const lerp = (a, b, n) => a + (b - a) * n;
+  function animateCursor() {
+    cx = lerp(cx, tx, 0.12);
+    cy = lerp(cy, ty, 0.12);
+    cursor.style.left = cx + 'px';
+    cursor.style.top  = cy + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // hover state
+  document.querySelectorAll('a, button, .project-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+  });
+
+  // ── SCROLL-REVEAL for project cards ──
+  const cards = document.querySelectorAll('.project-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(card => observer.observe(card));
+
+  // ── PARALLAX hero image ──
+  const heroImg = document.querySelector('.hero-image-wrap img');
+  window.addEventListener('scroll', () => {
+    if (!window.__parallaxEnabled) return;
+    const y = window.scrollY;
+    if (heroImg) {
+      heroImg.style.transform = `translateY(${y * 0.12}px) scale(1.02)`;
+    }
+  }, { passive: true });
+</script>
+</body>
+</html>
